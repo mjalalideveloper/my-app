@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+  --home-background: url(./assets/homeBackground.jpg);
+}
+
+@theme {
+  --color-primary: #00ff00;
+  --color-secondary: #99ff99;
+  --color-text: #999999;
+  --color-background: #222222;
+}
