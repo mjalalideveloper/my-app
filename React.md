@@ -171,6 +171,8 @@ export default MyComponent;
 
 Props (short for "properties") are a way to pass data from a parent component to a child component in React. They are read-only and allow you to customize the behavior and appearance of child components based on the data provided by the parent.
 
+**Props are Read-Only**: Props cannot be modified by the child component. They are immutable and should be treated as such.
+
 Here is an example of how to use props in React:
 
 ```jsx
@@ -449,4 +451,381 @@ Output:
 </div>
 ```
 
+### Prop in Class components
 
+In class components, props are accessed using `this.props`. Here is an example of how to use props in a class component:
+
+```jsx
+import React, { Component } from "react";
+class Greeting extends Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+export default Greeting;
+```
+
+```jsx
+import React, { Component } from "react";
+import Greeting from "./Greeting";
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Greeting name="Alice" />
+        <Greeting name="Bob" />
+        <Greeting name="Charlie" />
+      </div>
+    );
+  }
+}
+export default App;
+```
+
+Output:
+
+```
+Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
+```
+
+> Default Props in Class Components
+
+```jsx
+import React, { Component } from "react";
+class Greeting extends Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+Greeting.defaultProps = {
+  name: "Guest", // Default value for name prop
+};
+
+export default Greeting;
+```
+
+```jsx
+import React, { Component } from "react";
+import Greeting from "./Greeting";
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Greeting name="Alice" /> {/* name prop provided */}
+        <Greeting /> {/* name prop not provided, will use default */}
+      </div>
+    );
+  }
+}
+export default App;
+```
+
+Output:
+
+```
+Hello, Alice!
+Hello, Guest!
+```
+
+### Prop Types
+
+PropTypes is a library in React that allows you to specify the types of props that a component should receive. This helps catch bugs and ensures that components are used correctly. You can define prop types for both functional and class components.
+
+> PropTypes definition
+> [https://reactjs.org/docs/typechecking-with-proptypes.html](https://reactjs.org/docs/typechecking-with-proptypes.html)
+
+To use PropTypes, you need to install the `prop-types` package:
+
+```bash
+npm install prop-types
+```
+
+Here is an example of how to use PropTypes in a functional component:
+
+```jsx
+import React from "react";
+import PropTypes from "prop-types";
+
+function Greeting({ name, age }) {
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>You are {age} years old.</p>
+    </div>
+  );
+}
+Greeting.propTypes = {
+  name: PropTypes.string.isRequired, // name should be a string and is required
+  age: PropTypes.number, // age should be a number
+};
+Greeting.defaultProps = {
+  age: 18, // Default value for age prop
+};
+export default Greeting;
+```
+
+```jsx
+import React from "react";
+import Greeting from "./Greeting";
+function App() {
+  return (
+    <div>
+      <Greeting name="Alice" age={25} /> {/* Valid usage */}
+      <Greeting name="Bob" /> {/* age will use default value */}
+      <Greeting age={30} />{" "}
+      {/* This will trigger a warning because name is required */}
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+Hello, Alice!
+Hello, Bob!
+Hello, Guest!
+```
+
+## State in React
+
+State is a built-in object in React that allows components to manage and track data that can change over time. Unlike props, which are passed from parent to child components and are read-only, state is managed within the component itself and can be updated using the `setState` method in class components or the `useState` hook in functional components.
+
+**State is not Read-Only**: State can be modified by the component itself using the `setState` method or the `useState` hook.
+
+### State in Class Components
+
+In class components, state is initialized in the constructor and updated using the `setState` method. Here is an example:
+
+```jsx
+import React, { Component } from "react";
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = {
+      count: 0,
+    };
+  }
+
+  // Method to increment the count
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+export default Counter;
+```
+
+Output:
+
+```
+Count: 0
+[Increment Button]
+Count: 1
+[Increment Button]
+Count: 2
+[Increment Button]
+```
+
+### Why State? (very important for job interviews)
+
+```jsx
+import React, { Component } from "react";
+class Name extends Component {
+  constructor(props) {
+    super(props);
+
+    this.randomName = {
+      name: "Guest",
+    };
+  }
+
+  changeName = () => {
+    this.randomName.name = "John";
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, {this.randomName.name}!</h1>
+        <button onClick={this.changeName}>Change Name</button>
+      </div>
+    );
+  }
+}
+export default Name;
+```
+
+Output:
+
+```
+Hello, Guest!
+
+[Change Name Button]
+Hello, Guest!
+```
+
+> What is happening here?
+> The name is changing in the object, but React doesn't know that it needs to re-render the component because the change is not tracked by React's state management system. As a result, the UI does not update to reflect the new name.
+
+> What happens to vDOM?
+> React uses a virtual DOM (vDOM) to optimize updates to the actual DOM. When the state of a component changes, React updates the virtual DOM first, then efficiently updates the real DOM to match. However, in this case, since the change to `randomName` is not part of the component's state, React does not recognize that it needs to update the virtual DOM or the actual DOM.
+
+> What is the solution?
+> The solution is to use React's state management system to track changes. By using `this.setState` to update the state, React will know when to re-render the component and update the UI accordingly.
+
+```jsx
+import React, { Component } from "react";
+class Name extends Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = {
+      name: "Guest",
+    };
+  }
+
+  // Method to change the name
+  changeName = () => {
+    this.setState({ name: "John" });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, {this.state.name}!</h1>
+        <button onClick={this.changeName}>Change Name</button>
+      </div>
+    );
+  }
+}
+export default Name;
+```
+
+Output:
+
+```
+Hello, Guest!
+
+[Change Name Button]
+Hello, John!
+```
+
+### setState
+
+The `setState` method is used in class components to update the component's state. When you call `setState`, React schedules an update to the component's state and tells React that this component and its children need to be re-rendered with the updated state.
+
+We cannot update the state directly like this:
+
+```jsx
+this.state.count = this.state.count + 1; // Incorrect way to update state
+```
+
+Instead, we should use `setState` like this:
+
+```jsx
+this.setState({ count: this.state.count + 1 }); // Correct way to update state
+```
+
+for example:
+
+```jsx
+import React, { Component } from "react";
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = {
+      count: 0,
+    };
+  }
+
+  // Method to increment the count
+  increment1 = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+  // Or:
+  increment2 = () => {
+    this.setState((prevState) => ({ count: prevState.count + 1 }));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+export default Counter;
+```
+
+### State in Functional Components
+
+In functional components, state is managed using the `useState` **Hook**.
+
+[useState Hook](#useState-Hook)
+
+## Event Handling in React
+
+For example in HTML:
+
+```html
+<button onclick="handleClick()">Click Me</button>
+```
+
+For example in jsx:
+
+```jsx
+<button onClick={handleClick}>Click Me</button>
+```
+
+> What id different?
+>
+> 1. In JSX, event names are written in **camelCase** (e.g., `onClick` instead of `onclick`).
+> 2. In JSX, you pass a function as the event handler, rather than a string. This allows you to use JavaScript functions directly.
+> 3. In JSX, you typically use curly braces `{}` to embed JavaScript expressions within the JSX code.
+
+Here is an example of event handling in a React functional component:
+
+```jsx
+import React from "react";
+
+class ClickMe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this); // Binding the method
+    this.name = "Guest";
+  }
+
+  handleClick() {
+    alert("Button Clicked!");
+    this.name = "John";
+    this.forceUpdate(); // Force re-render to see the change
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Hello, {this.name}!</p>
+        <button onClick={this.handleClick}>Change Name</button>
+      </div>
+    );
+  }
+}
+```
