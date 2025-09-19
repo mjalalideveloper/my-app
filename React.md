@@ -829,3 +829,357 @@ class ClickMe extends React.Component {
   }
 }
 ```
+
+### Parameters in Event Handlers
+
+In React, you can pass parameters to event handlers. This is often done using an arrow function or by binding the method in the constructor.
+
+Here’s an example using an arrow function:
+
+```jsx
+import React from "react";
+
+class ClickMe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this); // Binding the method
+    this.name = "Guest";
+  }
+
+  handleClick(name) {
+    alert("Button Clicked!");
+    this.name = name;
+    this.forceUpdate(); // Force re-render to see the change
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Hello, {this.name}!</p>
+        <button onClick={() => this.handleClick("John")}>Change Name</button>
+      </div>
+    );
+  }
+}
+```
+
+### Event Object
+
+In React, when an event is triggered, an event object is passed to the event handler. This event object contains information about the event, such as the type of event, the target element, and other relevant details.
+
+Here’s an example of how to use the event object in a React component:
+
+```jsx
+import React from "react";
+
+class ClickMe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this); // Binding the method
+    this.name = "Guest";
+  }
+
+  handleClick(event) {
+    // Accessing the event object
+    console.log("Event Type:", event.type);
+    console.log("Event Target:", event.target);
+    this.name = "John";
+    this.forceUpdate(); // Force re-render to see the change
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Hello, {this.name}!</p>
+        {/* <p>Hello, {(e) => this.name(e, otherParams)}!</p> // => With parameters */}
+        <button onClick={this.handleClick}>Change Name</button>
+      </div>
+    );
+  }
+}
+```
+
+## Conditional Rendering in React
+
+Conditional rendering in React allows you to render different components or elements based on certain conditions. This is typically done using JavaScript conditional statements like `if`, `else`, the ternary operator, or logical `&&` operator within the JSX code.
+
+1- Using `if` statement:
+
+```jsx
+import React from "react";
+
+class UserGreeting extends React.Component {
+  render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    if (isLoggedIn) {
+      return <h1>Welcome back!</h1>;
+    } else {
+      return <h1>Please sign up.</h1>;
+    }
+  }
+}
+export default UserGreeting;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import UserGreeting from "./UserGreeting";
+function App() {
+  return (
+    <div>
+      <UserGreeting isLoggedIn={true} />{" "}
+      {/* Change to false to see different output */}
+    </div>
+  );
+}
+```
+
+Output:
+
+```
+Welcome back!
+```
+
+2- Using Ternary Operator:
+
+```jsx
+import React from "react";
+
+class UserGreeting extends React.Component {
+  render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    return <h1>{isLoggedIn ? "Welcome back!" : "Please sign up."}</h1>;
+  }
+}
+export default UserGreeting;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import UserGreeting from "./UserGreeting";
+function App() {
+  return (
+    <div>
+      <UserGreeting isLoggedIn={true} />{" "}
+      {/* Change to false to see different output */}
+    </div>
+  );
+}
+```
+
+Output:
+
+```
+Welcome back!
+```
+
+3- Using Logical `&&` Operator:
+
+```jsx
+import React from "react";
+class UserGreeting extends React.Component {
+  render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    return (
+      <div>
+        {isLoggedIn && <h1>Welcome back!</h1>}
+        {!isLoggedIn && <h1>Please sign up.</h1>}
+      </div>
+    );
+  }
+}
+export default UserGreeting;
+```
+
+or
+
+```jsx
+import React from "react";
+class UserGreeting extends React.Component {
+  render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    return (
+      <div>
+        {isLoggedIn ? <h1>Welcome back!</h1> : <h1>Please sign up.</h1>}
+      </div>
+    );
+  }
+}
+export default UserGreeting;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import UserGreeting from "./UserGreeting";
+function App() {
+  return (
+    <div>
+      <UserGreeting isLoggedIn={true} />{" "}
+      {/* Change to false to see different output */}
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+Welcome back!
+```
+
+4- Element Variables:
+
+```jsx
+import React from "react";
+class UserGreeting extends React.Component {
+  render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    let message;
+    if (isLoggedIn) {
+      message = <h1>Welcome back!</h1>;
+    } else {
+      message = <h1>Please sign up.</h1>;
+    }
+    return <div>{message}</div>;
+  }
+}
+export default UserGreeting;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import UserGreeting from "./UserGreeting";
+function App() {
+  return (
+    <div>
+      <UserGreeting isLoggedIn={true} />{" "}
+      {/* Change to false to see different output */}
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+Welcome back!
+```
+
+## List Rendering in React
+
+List rendering in React is the process of displaying a list of items by iterating over an array and rendering a component or element for each item in the array. This is typically done using the `map()` method, which creates a new array by applying a function to each element of the original array.
+
+Here is an example of how to render a list in React:
+
+```jsx
+import React from "react";
+
+class UserList extends React.Component {
+  render() {
+    const users = this.props.users; // Array of user objects
+    return (
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            {user.name} - {user.email}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+}
+export default UserList;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import UserList from "./UserList";
+
+function App() {
+  const users = [
+    { id: 1, name: "Alice", email: "alice@example.com" },
+    { id: 2, name: "Bob", email: "bob@example.com" },
+    { id: 3, name: "Charlie", email: "charlie@example.com" },
+  ];
+
+  return (
+    <div>
+      <UserList users={users} />
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+- Alice -  alice@example.com
+- Bob -  bob@example.com
+- Charlie -  charlie@example.com
+```
+
+### Key Prop
+
+When rendering lists in React, it is important to provide a unique `key` prop to each list item. The `key` prop helps React identify which items have changed, been added, or been removed, allowing for efficient updates to the UI.
+
+In the example above, we used `user.id` as the key for each list item. It is important that the key is unique among its siblings. Avoid using indexes as keys if the list can change, as this can lead to performance issues and unexpected behavior.
+
+```jsx
+{
+  users.map((user) => (
+    <li key={user.id}>
+      {user.name} - {user.email}
+    </li>
+  ));
+}
+```
+
+In this case, `user.id` is assumed to be a unique identifier for each user in the list.
+
+**Incorrect Key Usage**
+
+> Using Non-Unique Values as Keys
+
+```jsx
+{
+  users.map((user) => (
+    <li key={user.name}>
+      {user.name} - {user.email}
+    </li>
+  ));
+}
+```
+
+> Using Index as Key **(not recommended)**
+
+```jsx
+{
+  users.map((user, index) => (
+    <li key={index}>
+      {user.name} - {user.email}
+    </li>
+  ));
+}
+// This approach is not recommended if the list can change, as it can lead to performance issues and unexpected behavior.
+```
+
+> Usin math.random() as Key **(not recommended)**
+
+```jsx
+{
+  users.map((user) => (
+    <li key={Math.random()}>
+      {user.name} - {user.email}
+    </li>
+  ));
+}
+// This approach is not recommended because Math.random() generates a new value on each render, defeating the purpose of keys.
+```
