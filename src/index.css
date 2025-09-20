@@ -1,22 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --home-background: url(./assets/homeBackground.jpg);
-}
-
-body {
-  font-family: monospace;
-}
-
-@keyframes typing {
-  0% {
-    display: inline;
-  }
-  50% {
-    display: none;
-  }
-}
-
 @theme {
   --color-primary: #00ff9d;
   --color-secondary: #00b8ff;
@@ -25,6 +8,4 @@ body {
   --color-background: #1e2a38;
   --color-acent: #ff007c;
   --color-menu: #050814;
-
-  --animate-typing: typing 1s infinite;
 }

@@ -81,6 +81,21 @@ function Component() {
 export default Component;
 ```
 
+2. **Inline Styles**: You can apply styles directly to elements using the `style` attribute, which accepts a JavaScript object.
+
+```jsx
+function Component() {
+  const divStyle = {
+    color: "blue",
+    backgroundColor: "lightgray",
+    padding: "10px",
+  };
+
+  return <div style={divStyle}>Hello, World!</div>;
+}
+export default Component;
+```
+
 ## What is JSX?
 
 JSX (JavaScript XML) is a syntax extension for JavaScript that allows you to write HTML-like code within your JavaScript files. It is commonly used in React to describe the structure of the user interface. JSX makes it easier to visualize the UI and how it will be rendered in the browser.
@@ -590,6 +605,36 @@ Output:
 Hello, Alice!
 Hello, Bob!
 Hello, Guest!
+```
+
+### Methods as Prop
+
+You can also pass methods as props to child components. This is useful for handling events or callbacks from child components.
+
+```jsx
+function Button({ onClick, label }) {
+  return <button onClick={onClick}>{label}</button>;
+}
+export default Button;
+```
+
+```jsx
+import React, { Component } from "react";
+import Button from "./Button";
+class App extends Component {
+  handleClick = () => {
+    alert("Button Clicked!");
+  };
+
+  render() {
+    return (
+      <div>
+        <Button onClick={this.handleClick} label="Click Me" />
+      </div>
+    );
+  }
+}
+export default App;
 ```
 
 ## State in React
@@ -1182,4 +1227,190 @@ In this case, `user.id` is assumed to be a unique identifier for each user in th
   ));
 }
 // This approach is not recommended because Math.random() generates a new value on each render, defeating the purpose of keys.
+```
+
+## Form Handling in React
+
+Form handling in React involves managing form elements and their state. React provides a way to handle form inputs using controlled components, where the form data is handled by the component's state.
+
+Here is an example of how to handle a simple form in React:
+
+```jsx
+import React from "react";
+
+class MyForm extends React.Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = {
+      name: "",
+      email: "",
+    };
+  }
+
+  // Handle input changes
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  // Handle form submission
+  handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    alert(`Name: ${this.state.name}, Email: ${this.state.email}`);
+  };
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <div>
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={this.state.name} // Controlled input
+              onChange={this.handleChange} // Handle change event
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+          </label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    );
+  }
+}
+export default MyForm;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import MyForm from "./MyForm";
+
+function App() {
+  return (
+    <div>
+      <MyForm />
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+Name: [input field]
+Email: [input field]
+[Submit Button]
+```
+
+When the user fills out the form and clicks the "Submit" button, an alert will display the entered name and email.
+
+## Fragment in React
+
+In React, a Fragment is a special component that allows you to group a list of children without adding extra nodes to the DOM. This is useful when you want to return multiple elements from a component's render method without wrapping them in an unnecessary HTML element like a `div`.
+
+Here is an example of how to use Fragments in React:
+
+````jsx
+import React from "react";
+
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        {/* This is a fragment */}
+      </React.Fragment>
+    );
+  }
+}
+```jsx
+import React from "react";
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        {/* This is a fragment */}
+      </React.Fragment>
+    );
+  }
+}
+export default MyComponent;
+````
+
+Or using the shorthand syntax:
+
+```jsx
+import React from "react";
+class MyComponent extends React.Component {
+  render() {
+    return <>{/* This is a fragment */}</>;
+  }
+}
+export default MyComponent;
+```
+
+## React Icons package
+
+React Icons is a popular library that provides a collection of customizable icons for React applications. It allows you to easily include icons from various icon libraries, such as Font Awesome, Material Design, and more, directly in your React components.
+
+[React Icons Documentation](https://react-icons.github.io/react-icons/)
+
+```bash
+npm install react-icons --save
+```
+
+Here is an example of how to use React Icons in a React component:
+
+```jsx
+import React from "react";
+import { FaBeer } from "react-icons/fa"; // Importing a Font Awesome icon
+
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Welcome to My Component!</h1>
+        <p>
+          Enjoy a beer! <FaBeer />
+        </p> {/* Using the icon */}
+      </div>
+    );
+  }
+}
+export default MyComponent;
+```
+
+```jsx
+// Main App (app.jsx)
+import React from "react";
+import MyComponent from "./MyComponent";
+
+function App() {
+  return (
+    <div>
+      <MyComponent />
+    </div>
+  );
+}
+export default App;
+```
+
+Output:
+
+```
+Welcome to My Component!
+Enjoy a beer! [Beer Icon]
 ```
